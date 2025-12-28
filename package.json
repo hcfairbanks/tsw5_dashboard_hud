@@ -1,6 +1,6 @@
 {
   "name": "tws5-dashboard",
-  "version": "2025.12.27.001",
+  "version": "2025.12.28.001",
   "description": "A dashboard for TSW5. Clones the games HUD. Runs a webserver for access across your local network for things like cellphones or tablets.",
   "main": "server.js",
   "scripts": {
