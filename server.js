@@ -4,7 +4,9 @@ const path = require('path');
 const axios = require('axios');
 
 // Read the API key from the specified file
-const apiKeyPath = 'C:\\Users\\<YOUR_USER_HERE>\\Documents\\My Games\\TrainSimWorld5\\Saved\\Config\\CommAPIKey.txt';
+// const apiKeyPath = 'C:\\Users\\<YOUR_USER_HERE>\\Documents\\My Games\\TrainSimWorld5\\Saved\\Config\\CommAPIKey.txt';
+const windows_users_folder = process.env.USERPROFILE || 'DefaultUser';
+const apiKeyPath = path.join(windows_users_folder, 'Documents', 'My Games', 'TrainSimWorld5', 'Saved', 'Config', 'CommAPIKey.txt');
 
 // Set to true for miles, false for kilometers
 const useMiles = true;
