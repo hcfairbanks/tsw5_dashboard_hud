@@ -1,7 +1,9 @@
+'use strict';
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const { networkInterfaces } = require('os');
 
 // Read the API key from the specified file
 // const apiKeyPath = 'C:\\Users\\<YOUR_USER_HERE>\\Documents\\My Games\\TrainSimWorld5\\Saved\\Config\\CommAPIKey.txt';
@@ -9,7 +11,27 @@ const windows_users_folder = process.env.USERPROFILE || 'DefaultUser';
 const apiKeyPath = path.join(windows_users_folder, 'Documents', 'My Games', 'TrainSimWorld5', 'Saved', 'Config', 'CommAPIKey.txt');
 
 // Set to true for miles, false for kilometers
-const useMiles = true;
+const useMiles = false;
+
+/**
+ * Gets the internal IP address of this machine
+ */
+function getInternalIpAddress() {
+  const nets = networkInterfaces();
+  
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      // 'IPv4' is a string in Node <= 17, from 18 it's a number 4
+      const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
+
+      if (net.family === familyV4Value && !net.internal) {
+        return net.address; // Return the first matching address
+      }
+    }
+  }
+  return null; // Return null if no suitable IP is found
+}
 
 // Speed conversion factor: m/s to km/h = 3.6, m/s to mph = 2.23694
 const speedConversionFactor = useMiles ? 2.23694 : 3.6;
@@ -17,13 +39,40 @@ const speedConversionFactor = useMiles ? 2.23694 : 3.6;
 // Distance conversion factor: cm to meters = 100, cm to feet = 30.48
 const distanceConversionFactor = useMiles ? 30.48 : 100;
 
-let apiKey = '';
-try {
-    apiKey = fs.readFileSync(apiKeyPath, 'utf8').trim();
-    // console.log('API Key:', apiKey);
-} catch (err) {
-    // console.error('Error reading API key:', err.message);
+/**
+ * Waits for a specified number of milliseconds
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/**
+ * Attempts to read and validate the API key, retrying until valid
+ */
+async function waitForValidApiKey() {
+    let apiKey = '';
+    while (!apiKey) {
+        try {
+            apiKey = fs.readFileSync(apiKeyPath, 'utf8').trim();
+            if (!apiKey) {
+                throw new Error('API key is empty');
+            }
+            console.log('API Key loaded successfully');
+            return apiKey;
+        } catch (err) {
+            console.log('Waiting for TSW CommAPIKey ...');
+            await sleep(3000);
+        }
+    }
+}
+
+let apiKey = '';
+// Wait for valid API key before starting server
+(async () => {
+    apiKey = await waitForValidApiKey();
+
+// Flag to track if subscriptions have been created
+let subscriptionsCreated = false;
 
 // Array of subscription endpoints to create
 const subscriptionEndpoints = [
@@ -61,8 +110,15 @@ const subscriptionEndpoints = [
 
 /**
  * Creates subscriptions for all endpoints in the subscriptionEndpoints array
+ * Only creates subscriptions once
  */
 async function createSubscriptions() {
+    if (subscriptionsCreated) {
+        console.log('Subscriptions already created, skipping...');
+        return;
+    }
+    
+    console.log('Creating subscriptions...');
     for (const endpoint of subscriptionEndpoints) {
         try {
             const config = {
@@ -74,12 +130,16 @@ async function createSubscriptions() {
                 }
             };
             const response = await axios.request(config);
-            console.log(`Subscription response for ${endpoint}:`, response.data);
+            console.log(`Subscription created for ${endpoint}`);
         } catch (err) {
-          console.log('apiKey:', apiKey);
           console.error(`Failed to create subscription ${endpoint}:`, err.message);
         }
+        
+        // Wait 1/4 second between each subscription request
+        await sleep(250);
     }
+    subscriptionsCreated = true;
+    console.log('All subscriptions created');
 }
 
 const server = http.createServer((req, res) => {
@@ -100,9 +160,7 @@ const server = http.createServer((req, res) => {
   
   );
 
-    // Create subscriptions before starting to poll
-    createSubscriptions().then(() => {
-      console.log('All subscriptions created, starting data stream...');
+      console.log('Starting data stream...');
       
       // Fetch and send data every 500ms
       const interval = setInterval(async () => {
@@ -314,10 +372,6 @@ const server = http.createServer((req, res) => {
 
       // Stop the interval if the user closes the tab
       req.on('close', () => clearInterval(interval));
-    }).catch((err) => {
-      console.error('Error creating subscriptions:', err);
-      res.write(`data: {"error": "Failed to create subscriptions: ${err.message}"}\n\n`);
-    });
   }else if (req.url === '/default.css') {
     // Handle CSS file request
     res.setHeader('Content-Type', 'text/css');
@@ -326,6 +380,15 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(3000, '0.0.0.0', () => {
-  console.log('Server running at http://localhost:3000');
+// Create subscriptions once before starting the server
+createSubscriptions().then(() => {
+  server.listen(3000, '0.0.0.0', () => {
+    const myIp = getInternalIpAddress();
+    console.log('Server running locally at http://localhost:3000');
+    if (myIp) {
+      console.log('Server accessible on local network at http://' + myIp + ':3000');
+    }
+  });
 });
+
+})();
