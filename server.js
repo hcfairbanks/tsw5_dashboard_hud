@@ -55,9 +55,9 @@ async function waitForValidApiKey() {
         try {
             apiKey = fs.readFileSync(apiKeyPath, 'utf8').trim();
             if (!apiKey) {
-                throw new Error('API key is empty');
+                throw new Error('CommAPIKey key is empty');
             }
-            console.log('API Key loaded successfully');
+            console.log('CommAPIKey Key loaded successfully');
             return apiKey;
         } catch (err) {
             console.log('Waiting for TSW CommAPIKey ...');
