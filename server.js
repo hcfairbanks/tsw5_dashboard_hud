@@ -382,11 +382,12 @@ const server = http.createServer((req, res) => {
 
 // Create subscriptions once before starting the server
 createSubscriptions().then(() => {
-  server.listen(3000, '0.0.0.0', () => {
+  const port = 3000;
+  server.listen(port, '0.0.0.0', () => {
     const myIp = getInternalIpAddress();
-    console.log('Server running locally at http://localhost:3000');
+    console.log('Server running locally at http://localhost:' + port);
     if (myIp) {
-      console.log('Server accessible on local network at http://' + myIp + ':3000');
+      console.log('Server accessible on local network at http://' + myIp + ':' + port);
     }
   });
 });

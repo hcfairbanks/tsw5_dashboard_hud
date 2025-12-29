@@ -9,7 +9,7 @@ For the latest version, a public repo is available here
 https://github.com/hcfairbanks/tsw5_dashboard_hud
 
 
-Setup and Installation
+Installation
 
 TSW5 needs to run with HTTP API Enabled
 Here are the instructions from the Dovetail doccumentation 
@@ -22,7 +22,7 @@ observe the “LAUNCH OPTIONS” section. Add the parameter there, as shown:
 With this in place, load the game up to the main menu once and then exit. This will
 ensure that the communication API key is generated.
 
-The official API PDF instructions are available 
+The official API PDF instructions are available here
 https://forums.dovetailgames.com/threads/train-sim-world-api-support.94488/
 
 
