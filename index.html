@@ -560,7 +560,42 @@ function drawDistanceToNextSpeedLimitBox(options, distance) {
     options.ctx.fillText(displayValue, boxX + boxWidth / 2, boxY + boxHeight / 2);
 }
 
-function draw(iSpeed, speedLimit, isSlipping, powerHandle, incline, nextSpeedLimit, distanceToNextSpeedLimit, trainBrakeValue, trainBrakeActive, locomotiveBrakeValue, locomotiveBrakeActive, electricDynamicBrakeValue, electricBrakeActive, isTractionLocked) {
+function drawTimeBox(options, localTime) {
+    var boxWidth = 195;
+    var boxHeight = 61;
+    // Position centered horizontally below the brake boxes
+    var boxX = options.center.X - (boxWidth / 2);
+    var boxY = options.center.Y + (boxHeight * 0.3) + 61; // Below the brake boxes
+    
+    // White box
+    var boxColor = "rgb(255, 255, 255)";
+    
+    // Draw white outlined box
+    options.ctx.strokeStyle = boxColor;
+    options.ctx.lineWidth = 3.6;
+    options.ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+    
+    // Parse and format the time from ISO8601 format
+    var displayValue = '--:--:--';
+    if (localTime) {
+        try {
+            // Extract time portion from ISO8601 string (e.g., "2020-12-27T10:14:49.982-04:00")
+            var timePart = localTime.split('T')[1].split('.')[0]; // Gets "10:14:49"
+            displayValue = timePart;
+        } catch (e) {
+            console.error('Error parsing time:', e);
+        }
+    }
+    
+    // Draw time value
+    options.ctx.fillStyle = boxColor;
+    options.ctx.font = 'bold 34px sans-serif';
+    options.ctx.textAlign = 'center';
+    options.ctx.textBaseline = 'middle';
+    options.ctx.fillText(displayValue, boxX + boxWidth / 2, boxY + boxHeight / 2);
+}
+
+function draw(iSpeed, speedLimit, isSlipping, powerHandle, incline, nextSpeedLimit, distanceToNextSpeedLimit, trainBrakeValue, trainBrakeActive, locomotiveBrakeValue, locomotiveBrakeActive, electricDynamicBrakeValue, electricBrakeActive, isTractionLocked, localTime) {
     var canvas = document.getElementById('tutorial');
     if (canvas !== null && canvas.getContext) {
         var options = buildOptionsAsJSON(canvas, iSpeed);
@@ -590,6 +625,7 @@ function draw(iSpeed, speedLimit, isSlipping, powerHandle, incline, nextSpeedLim
             drawNextSpeedLimitBox(options, nextSpeedLimit);
             drawDistanceToNextSpeedLimitBox(options, distanceToNextSpeedLimit);
         }
+        drawTimeBox(options, localTime);
     } else {
         alert("Canvas not supported!");
     }
@@ -612,7 +648,7 @@ function draw(iSpeed, speedLimit, isSlipping, powerHandle, incline, nextSpeedLim
         // Redraw at regular intervals to support flashing
         setInterval(function() {
             if (currentData) {
-                draw(Math.round(currentData.speed), currentData.limit, currentData.isSlipping, currentData.powerHandle, currentData.incline, currentData.nextSpeedLimit, currentData.distanceToNextSpeedLimit, currentData.trainBreak, currentData.trainBrakeActive, currentData.locomotiveBrakeHandle, currentData.locomotiveBrakeActive, currentData.electricDynamicBrake, currentData.electricBrakeActive, currentData.isTractionLocked);
+                draw(Math.round(currentData.speed), currentData.limit, currentData.isSlipping, currentData.powerHandle, currentData.incline, currentData.nextSpeedLimit, currentData.distanceToNextSpeedLimit, currentData.trainBreak, currentData.trainBrakeActive, currentData.locomotiveBrakeHandle, currentData.locomotiveBrakeActive, currentData.electricDynamicBrake, currentData.electricBrakeActive, currentData.isTractionLocked, currentData.localTime);
             }
         }, 100); // Redraw every 100ms for smooth flashing
         
@@ -622,7 +658,7 @@ function draw(iSpeed, speedLimit, isSlipping, powerHandle, incline, nextSpeedLim
             // Display the data on the page
             document.getElementById('display').innerText = JSON.stringify(data, null, 2);
             // Update the speedometer with the new speed value and limit
-            draw(Math.round(data.speed), data.limit, data.isSlipping, data.powerHandle, data.incline, data.nextSpeedLimit, data.distanceToNextSpeedLimit, data.trainBreak, data.trainBrakeActive, data.locomotiveBrakeHandle, data.locomotiveBrakeActive, data.electricDynamicBrake, data.electricBrakeActive, data.isTractionLocked);
+            draw(Math.round(data.speed), data.limit, data.isSlipping, data.powerHandle, data.incline, data.nextSpeedLimit, data.distanceToNextSpeedLimit, data.trainBreak, data.trainBrakeActive, data.locomotiveBrakeHandle, data.locomotiveBrakeActive, data.electricDynamicBrake, data.electricBrakeActive, data.isTractionLocked, data.localTime);
         };
 
         eventSource.onerror = () => {

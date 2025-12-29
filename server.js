@@ -98,6 +98,7 @@ let subscriptionsCreated = false;
 // Array of subscription endpoints to create
 const subscriptionEndpoints = [
     '/subscription/DriverAid.Data?Subscription=1',
+    '/subscription/TimeOfDay.Data?Subscription=1 ',
     '/subscription/CurrentDrivableActor.Function.HUD_GetSpeed?Subscription=1',
     '/subscription/CurrentDrivableActor.Function.HUD_GetDirection?Subscription=1',
     '/subscription/CurrentDrivableActor.Function.HUD_GetPowerHandle?Subscription=1',
@@ -239,6 +240,7 @@ const server = http.createServer((req, res) => {
             waterTankLevel: 0,
             coalBunkerLevel: 0,
             isSteamRequired: false,
+            localTime: null,
             raw: rawData
           };
           
@@ -378,6 +380,12 @@ const server = http.createServer((req, res) => {
                   if (entry.Values['distanceToNextSpeedLimit'] !== undefined) {
                     // Convert cm to meters or feet depending on unit preference
                     formattedData.distanceToNextSpeedLimit = Math.round(entry.Values['distanceToNextSpeedLimit'] / distanceConversionFactor);
+                  }
+                }
+                // Extract local time from TimeOfDay.Data
+                else if (entry.Path === 'TimeOfDay.Data') {
+                  if (entry.Values['LocalTimeISO8601']) {
+                    formattedData.localTime = entry.Values['LocalTimeISO8601'];
                   }
                 }
               }
