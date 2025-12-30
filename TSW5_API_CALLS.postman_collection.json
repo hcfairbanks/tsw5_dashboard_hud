@@ -51,6 +51,85 @@
 			]
 		},
 		{
+			"name": "Driver Input",
+			"item": [
+				{
+					"name": "CabLight_F Is Active",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "DTGCommKey",
+								"value": "{{DTGCommKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/get/DriverInput/CabLight_F.Function.IsActive",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"DriverInput",
+								"CabLight_F.Function.IsActive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Driver Input",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/list/DriverInput/CabLight_F",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"list",
+								"DriverInput",
+								"CabLight_F"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Current Drivable Actor",
 			"item": [
 				{
@@ -81,6 +160,40 @@
 							"path": [
 								"get",
 								"CurrentDrivableActor.Function.HUD_GetSpeed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GameplayTasksComponent0",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/get/CurrentDrivableActor/GameplayTasksComponent0.ObjectName",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"CurrentDrivableActor",
+								"GameplayTasksComponent0.ObjectName"
 							]
 						}
 					},
@@ -219,6 +332,41 @@
 					"response": []
 				},
 				{
+					"name": "Get BP (AirPipe) Pressure_BAR_G",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/get/CurrentDrivableActor/Simulation/BP (AirPipe).Pressure_BAR_G",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"CurrentDrivableActor",
+								"Simulation",
+								"BP (AirPipe).Pressure_BAR_G"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Current Drivable Actor",
 					"request": {
 						"auth": {
@@ -239,14 +387,87 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/list/CurrentDrivableActor/Simulation",
+							"raw": "{{base_url}}/list/CurrentDrivableActor",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"list",
-								"CurrentDrivableActor",
-								"Simulation"
+								"CurrentDrivableActor"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Current Formation",
+			"item": [
+				{
+					"name": "0/Simulation/Sandbox.MaximumSandCapacity",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/get/CurrentFormation/0/Simulation/Sandbox.MaximumSandCapacity",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"CurrentFormation",
+								"0",
+								"Simulation",
+								"Sandbox.MaximumSandCapacity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list Current Formation",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/list/CurrentFormation",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"list",
+								"CurrentFormation"
 							]
 						}
 					},
@@ -570,6 +791,50 @@
 			]
 		},
 		{
+			"name": "Time of day",
+			"item": [
+				{
+					"name": "Time Of Day",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "DTGCommKey",
+								"value": "{{DTGCommKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/get/TimeOfDay.Data",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"TimeOfDay.Data"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Virtual Rail Driver",
 			"item": [
 				{
@@ -666,6 +931,44 @@
 							"path": [
 								"list",
 								"VirtualRailDriver"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Weather Manager",
+			"item": [
+				{
+					"name": "WeatherManager",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{DTGCommKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "DTGCommKey",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/get/WeatherManager.Data",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"get",
+								"WeatherManager.Data"
 							]
 						}
 					},
